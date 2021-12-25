@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import { logoutUser , addPassword } from "../../actions/authActions";
+
 class Dashboard extends Component {
 
   constructor(){
@@ -13,19 +14,26 @@ class Dashboard extends Component {
       errors: {}
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      });
+    }
+  }
   
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
   
   onSubmit = e =>{
-    
+    e.preventDefault();
     const newData = {
       userId: 'test',
       url: this.state.url,
       password: this.state.password
     }
-    
     this.props.addPassword(newData, this.props.history);
   };
   
@@ -85,5 +93,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser }
+  { logoutUser,addPassword }
 )(Dashboard);

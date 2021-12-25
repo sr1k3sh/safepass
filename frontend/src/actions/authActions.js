@@ -19,10 +19,14 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
+//save passwords
 export const addPassword = (data,history) => dispatch =>{
   axios
     .post('/api/users/password',data)
-    .then(res => history.push('/'))
+    .then(res => {
+      console.log(res)
+      history.push('/')
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
