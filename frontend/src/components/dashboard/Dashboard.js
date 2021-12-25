@@ -3,15 +3,65 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 class Dashboard extends Component {
+
+  constructor(){
+    super();
+    this.state ={
+      userId: "",
+      url: "",
+      password: "",
+      errors: {}
+    }
+  }
+  
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+  
+  onSubmit = e =>{
+    
+    const newData = {
+      userId: 'test',
+      url: this.state.url,
+      password: this.state.password
+    }
+    
+    this.props.addPassword(newData, this.props.history);
+  };
+  
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
   };
-render() {
+  
+  render() {
     const { user } = this.props.auth;
-return (
+    return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
+          <div className="col-12">
+            <form onSubmit={this.onSubmit}>
+              <div className="mb-3">
+                <label className="form-label">
+                  url
+                </label>
+                  <input className="form-control" name="url" type="text" onChange={this.onChange}></input>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">
+                  password
+                </label>
+                  <input className="form-control" name="password" type="password" onChange={this.onChange}></input>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">
+                  hidden userId
+                </label>
+                  <input className="form-control" name="userId" type="hidden"></input>
+              </div>
+              <button type="submit" className="btn btn-primary">Save</button>
+            </form>
+          </div>
           <div className="col s12 center-align">
             <h4>
               <b>Hey there,</b> {user.name.split(" ")[0]}
@@ -20,18 +70,6 @@ return (
                 <span style={{ fontFamily: "monospace" }}>MERN</span> app 👏
               </p>
             </h4>
-            <button
-              style={{
-                width: "150px",
-                borderRadius: "3px",
-                letterSpacing: "1.5px",
-                marginTop: "1rem"
-              }}
-              onClick={this.onLogoutClick}
-              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-            >
-              Logout
-            </button>
           </div>
         </div>
       </div>

@@ -2,8 +2,18 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import './../../../node_modules/bootstrap/js/src/collapse';
 import './_navbar.scss';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { logoutUser } from "../../actions/authActions";
 class Navbar extends Component {
+
+  onLogoutClick = e => {
+    e.preventDefault();
+    this.props.logoutUser();
+  };
+
   render() {
+    const {user} = this.props.auth;
     return ( 
       <nav className="navbar navbar-expand-lg navbar-light bg-light sp-navbar">
         <div className="container-fluid sp-navbar__container">
@@ -21,12 +31,42 @@ class Navbar extends Component {
                 Portfolio
               </li>
             </ul>
-            <Link to="/login" className="me-2"><button className="btn btn-primary">Login</button></Link>
-            <Link to="/register"><button className="btn btn-secondary">Register</button></Link>
+            {(() => {
+              if (user.id) {
+                return (
+                  <div>
+                    <Link to="/dashboard">Dashboard</Link>
+                    Welcome {user.name}
+                    <button className="btn btn-primary" onClick={this.onLogoutClick}>Logout</button>
+                  </div>
+                )
+              } 
+              else {
+                return (
+                  <div>
+                    <Link to="/login" className="me-2"><button className="btn btn-primary">Login</button></Link>
+                    <Link to="/register"><button className="btn btn-secondary">Register</button></Link>
+                  </div>
+                )
+              }
+            })()}
           </div>
         </div>
       </nav>
     );
   }
 }
-export default Navbar;
+
+Navbar.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(Navbar);

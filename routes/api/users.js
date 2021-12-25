@@ -6,8 +6,41 @@ const keys = require("../../config/keys");
 // Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
+const validatePasswordInput = require('../../validation/password');
 // Load User model
 const User = require("../../models/User");
+
+const Password = require('../../models/Password');
+
+// @route POST api/users/passwords
+// @desc add password
+// @access Public
+router.post("/password",(req,res)=>{
+  const { errors, isValid } = validatePasswordInput(req.body);
+
+  if(!isValid){
+    return res.status(400).json(req.body);
+  }
+  Password.findOne({url:req.body.url}).then(password =>{
+    const newData = new Password({
+      url: req.body.url,
+      password: req.body.password,
+      userId: req.body.userId
+    });
+    res.status(400).json({ email: newData });
+
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newData.password, salt, (err, hash) => {
+        if (err) throw err;
+        newData.password = hash;
+        newData
+          .save()
+          .then(data => res.json(data))
+          .catch(err => console.log(err));
+      });
+    });
+  });
+});
 
 // @route POST api/users/register
 // @desc Register user

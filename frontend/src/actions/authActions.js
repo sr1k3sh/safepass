@@ -18,6 +18,18 @@ export const registerUser = (userData, history) => dispatch => {
       })
     );
 };
+
+export const addPassword = (data,history) => dispatch =>{
+  axios
+    .post('/api/users/password',data)
+    .then(res => history.push('/'))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      }));
+}
+
 // Login - get user token
 export const loginUser = userData => dispatch => {
   axios

@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { MongoClient } = require('mongodb');
+
 const bodyParser = require("body-parser");
 const passport = require("passport");
 

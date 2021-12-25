@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 
 export default class Banner extends Component {
-    static propTypes = {
-        prop: PropTypes
-    }
-
     render() {
         return (
             <div className="col-xxl-12 sp-banner">
