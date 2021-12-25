@@ -1,0 +1,51 @@
+.sp-banner{
+    background: #1a1c56;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-8) var(--spacing-9);
+    overflow: hidden;
+    gap: var(--spacing-9);
+    @include media-breakpoint-up(sm){
+        flex-direction: row-reverse;
+    }
+    @include media-breakpoint-up(lg){
+        padding: var(--spacing-11) var(--spacing-12);
+    }
+    &__header{
+        color: #ffffff;
+        font-weight: bold;
+        letter-spacing: var(--spacing-1);
+        @include media-breakpoint-up(sm){
+            width: 69%;
+        }
+    }
+    &__desc{
+        color: #ffffff;
+        display: flex;
+    }
+
+    &__image-wrapper{
+        position: relative;
+        &::before{
+            content: "";
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            position: absolute;
+            top: 0;
+            border-radius: 50px;
+            z-index: 0;
+            @include media-breakpoint-up(sm){
+                transform: translate(67%, 5%) rotate(-37deg) scale(1.8);
+            }
+        }
+    }
+
+    &__image{
+        width: 100%;
+        position: relative;
+        z-index: 1;
+    }
+}

@@ -1,0 +1,38 @@
+:root{
+    --spacing-1: 0.125rem; //2px
+    --spacing-2: 0.25rem; //4px
+    --spacing-3: 0.5rem; //8px
+    --spacing-4: 0.75rem; //12px
+    --spacing-5: 1rem; //16px;
+    --spacing-6: 1.25rem //20px;
+    --spacing-7: 1.5rem; //24px;
+    --spacing-8: 2rem; //32px;
+    --spacing-9: 2.5rem; //40px;
+    --spacing-10: 3rem; //48px;
+    --spacing-11: 3.5rem; //56px;
+    --spacing-12: 4rem; //64px;
+    --spacing-13: 4.5rem //72px;
+    --spacing-14: 5rem //80px;
+}
+$font-family-base:'Poppins', sans-serif;
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 4rem,
+  4: 3.5rem,
+  5: 3rem ,
+  6: 2.5rem
+);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1600px
+);
+
+$display-font-weight: bold;
+
+$grid-gutter-width: 1rem;
