@@ -4,7 +4,7 @@ const { MongoClient } = require('mongodb');
 const bodyParser = require("body-parser");
 const passport = require("passport");
 
-// const path = require('path');
+const path = require('path');
 
 const users = require("./routes/api/users");
 
@@ -19,16 +19,6 @@ app.use(bodyParser.json());
 // DB Config
 const db = require("./config/keys").mongoURI;
 
-// Connect to MongoDB
-
-// const client = new MongoClient(db, { useNewUrlParser: true, useUnifiedTopology: true });
-// console.log(client);
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   console.log(collection)
-//   client.close();
-// });
 mongoose
   .connect(
     db,
@@ -49,7 +39,7 @@ if(process.env.NODE_ENV == "production"){
   app.use(express.static('frontend/build'));
 
   app.get('*',(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'build','frontend','index.html'));
+    res.sendFile(path.resolve(__dirname,'frontend','build','index.html'));
   });
 }
 
