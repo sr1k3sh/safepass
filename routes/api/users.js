@@ -19,26 +19,29 @@ router.post("/password",(req,res)=>{
   const { errors, isValid } = validatePasswordInput(req.body);
 
   if(!isValid){
-    return res.status(400).json(req.body);
+    return res.status(400).json(errors);
   }
-  Password.findOne({url:req.body.url}).then(password =>{
-    const newData = new Password({
-      url: req.body.url,
-      password: req.body.password,
-      userId: req.body.userId
-    });
-    res.status(400).json({ email: newData });
+  Password.findOne({url:req.body.url}).then(url =>{
+    if (url) {
+      return res.status(400).json({ url: "url already exists" });
+    } else {
+        const newData = new Password({
+          url: req.body.url,
+          password: req.body.password,
+          userId: req.body.userId
+        });
 
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newData.password, salt, (err, hash) => {
-        if (err) throw err;
-        newData.password = hash;
-        newData
-          .save()
-          .then(data => res.json(data))
-          .catch(err => console.log(err));
-      });
-    });
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newData.password, salt, (err, hash) => {
+            if (err) throw err;
+            newData.password = hash;
+            newData
+              .save()
+              .then(data => res.json(data))
+              .catch(err => console.log(err));
+          });
+        });
+    }
   });
 });
 
