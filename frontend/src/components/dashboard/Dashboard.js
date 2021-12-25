@@ -29,12 +29,16 @@ class Dashboard extends Component {
   
   onSubmit = e =>{
     e.preventDefault();
+    
     const newData = {
-      userId: 'test',
+      userId: this.props.auth.user.name,
       url: this.state.url,
       password: this.state.password
     }
+
     this.props.addPassword(newData, this.props.history);
+
+    e.target.reset();
   };
   
   onLogoutClick = e => {

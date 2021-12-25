@@ -25,7 +25,7 @@ export const addPassword = (data,history) => dispatch =>{
     .post('/api/users/password',data)
     .then(res => {
       console.log(res)
-      history.push('/')
+      history.push('/dashboard')
     })
     .catch(err =>
       dispatch({
