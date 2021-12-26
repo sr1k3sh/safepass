@@ -31,19 +31,50 @@ router.post("/password",(req,res)=>{
           userId: req.body.userId
         });
 
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newData.password, salt, (err, hash) => {
-            if (err) throw err;
-            newData.password = hash;
-            newData
-              .save()
-              .then(data => res.json(data))
-              .catch(err => console.log(err));
-          });
-        });
+        newData
+          .save()
+          .then(data => res.json(data))
+          .catch(err => console.log(err));
     }
   });
 });
+
+// @route POST api/users/get/password
+// @desc get password table list
+// @access Public
+router.post('/get/password', function (req, res) {
+  Password.find({userId:req.body.userId}, function(err, posts){
+      if(err){
+          console.log(err);
+      }
+      else {
+          res.json(posts);
+      }
+  });
+});
+
+// @route POST api/users/delete/password
+// @desc delete password from table list
+// @access Public
+router.delete('/delete/password', function (req, res) {
+  var url = req.body.url;
+  Password.deleteOne({ url: url }, function (err, results) {
+    if(err){
+      console.log(err);
+    }
+    else {
+      Password.find({userId:req.body.userId}, function(err, posts){
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.json(posts);
+        }
+      });
+    }
+  });
+});
+
 
 // @route POST api/users/register
 // @desc Register user

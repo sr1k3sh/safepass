@@ -3,6 +3,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import {
   GET_ERRORS,
+  GET_PASS,
   SET_CURRENT_USER,
   USER_LOADING
 } from "./types";
@@ -19,12 +20,56 @@ export const registerUser = (userData, history) => dispatch => {
     );
 };
 
+//get passwords list
+export const getPasswords = (data) => dispatch =>{
+  axios
+    .post('/api/users/get/password',data)
+    .then(res => {
+      dispatch({
+        type: GET_PASS,
+        payload: res
+      });
+    });
+}
+
+//delete password from list
+
+export const deletePassword = (data , history) => dispatch =>{
+
+  axios
+    .delete('/api/users/delete/password',{data:data})
+    .then(res => {
+      console.log(res)
+      // history.push('/')
+      // dispatch({
+      //   type: GET_PASS,
+      //   payload: res
+      // });
+    });
+  // var data = "url=https%3A%2F%2Fdribble.com%2Ftetst&userId=Rikesh%20Shrestha";
+
+  // var xhr = new XMLHttpRequest();
+  // xhr.withCredentials = true;
+
+  // xhr.addEventListener("readystatechange", function () {
+  //   if (this.readyState === 4) {
+  //     console.log(this.responseText);
+  //   }
+  // });
+
+  // xhr.open("DELETE", "/api/users/delete/password");
+  // xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+  // xhr.setRequestHeader("cache-control", "no-cache");
+  // xhr.setRequestHeader("postman-token", "3a890a0b-ea7c-c525-16f3-0533cd0443df");
+
+  // xhr.send(data);
+}
+
 //save passwords
 export const addPassword = (data,history) => dispatch =>{
   axios
     .post('/api/users/password',data)
     .then(res => {
-      console.log(res)
       history.push('/dashboard')
     })
     .catch(err =>
