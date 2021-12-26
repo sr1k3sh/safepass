@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser , addPassword, getPasswords, deletePassword } from "../../actions/authActions";
+import PasswordForm from "../passwords-form/PasswordForm";
+import PasswordList from "../passwords-list/PasswordList";
 
 class Dashboard extends Component {
 
@@ -13,7 +15,8 @@ class Dashboard extends Component {
       url: "",
       password: "",
       errors: {},
-      passwords:""
+      passwords:"",
+      isClicked: false
     }
   }
 
@@ -31,6 +34,7 @@ class Dashboard extends Component {
 
   
   onChange = e => {
+    console.log('test')
     this.setState({ [e.target.name]: e.target.value });
   };
   
@@ -64,74 +68,34 @@ class Dashboard extends Component {
     this.props.deletePassword(data,this.props.history);
   }
   
+  onClickPasswordBut = (e) =>{
+    e.preventDefault();
+    this.setState({
+      isClicked:!this.state.isClicked
+    })
+  }
+
   render() {
     const { data } = this.props.passwords;
     return (
-      <div style={{ height: "75vh" }} className="container valign-wrapper">
+      <div className="container">
         <div className="row">
-
-        <div className="col-12">
+          <div className="col-12">
+            <button className="btn btn-outline-primary sp-addpassword" onClick={this.onClickPasswordBut}>Add passwords</button>  
             {(() => {
-              if (data) {
+              if (this.state.isClicked) {
                 return (
-                  <ul className="sp-passtable">
-                    <li className="sp-passtable__item sp-passtable__item--title">
-                      <span className="sp-passtable__username">Username/Email/Phone</span>
-                      <span className="sp-passtable__url">URL</span>
-                      <span className="sp-passtable__password">Password</span>
-                      <span className="sp-passtable__action">Action</span>
-                    </li>
-                    {data.map((d,i)=><li className="sp-passtable__item" key={i}>
-                    <div className="sp-passtable__url">
-                        <label className="sp-passtable__hidden" htmlFor={"sp_username_"+i}>URL</label>
-                        <input id={"sp_username_"+i} type="url" readOnly value={d.userName} />
-                      </div>
-                      <div className="sp-passtable__url">
-                        <label className="sp-passtable__hidden" htmlFor={"sp_url_"+i}>URL</label>
-                        <input id={"sp_url_"+i} type="url" readOnly value={d.url} />
-                      </div>
-                      <div className="sp-passtable__password">
-                        <label className="sp-passtable__hidden" htmlFor={"sp_password_"+i}>Password</label>
-                        <input id={"sp_password_"+i} type="password" readOnly value={d.password}/>
-                      </div>
-                      <button onClick={this.removePassword} data-url={d.url} className="sp-passtable__action">remove</button>
-                    </li>)}
-                  </ul>
+                  <PasswordForm onSubmit={this.onSubmit} onChange={this.onChange}></PasswordForm>
                 )
               } 
             })()}
           </div>
-
-
-          <div className="col-12">
-            <form onSubmit={this.onSubmit}>
-            <div className="mb-3">
-                <label className="form-label">
-                  UserName/Email/Phonenumber
-                </label>
-                  <input className="form-control" name="userName" type="text" onChange={this.onChange}></input>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  url
-                </label>
-                  <input className="form-control" name="url" type="text" onChange={this.onChange}></input>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  password
-                </label>
-                  <input className="form-control" name="password" type="password" onChange={this.onChange}></input>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">
-                  hidden userId
-                </label>
-                  <input className="form-control" name="userId" type="hidden"></input>
-              </div>
-              <button type="submit" className="btn btn-primary">Save</button>
-            </form>
+        </div>
+        <div className="row">
+          <div className="col-12"> 
+            <PasswordList data={data}></PasswordList>
           </div>
+          
           
         </div>
       </div>

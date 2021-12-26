@@ -31,16 +31,17 @@
         }
 
         @include media-breakpoint-up(lg){
-            width: 25%;
+            width: 30%;
         }
     }
 
     &__action{
         width: 100%;
-        display: block;
+        display: flex;
+        justify-content: center;
         padding: var(--spacing-4) var(--spacing-5);
         @include media-breakpoint-up(lg){
-            width: 25%;
+            width: 10%;
         }
     }
 
@@ -49,4 +50,19 @@
             display: none;   
         }
     }
+
+    &__btn{
+        &--round{
+            width: var(--spacing-9);
+            height: var(--spacing-9);
+            border-radius: 50%;
+        }
+    }
+}
+
+.sp-addpassword,.sp-passform{
+    margin-bottom: var(--spacing-9);
+}
+.sp-addpassword{
+    margin-top: var(--spacing-9);
 }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import './../../../node_modules/bootstrap/js/src/collapse';
-import './_navbar.scss';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
@@ -23,20 +22,22 @@ class Navbar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item me-2">
-                About
-              </li>
-              <li className="nav-item">
-                Portfolio
-              </li>
+            <ul className="navbar-nav sp-navbar__navlist">
+              {(() => {
+                if (user.id) {
+                  return (
+                    <li className="nav-item sp-navbar__navitem">
+                      <Link to="/dashboard">Dashboard</Link>
+                    </li>
+                  )
+                } 
+              })()}
             </ul>
             {(() => {
               if (user.id) {
                 return (
-                  <div>
-                    <Link to="/dashboard">Dashboard</Link>
-                    Welcome {user.name}
+                  <div className="sp-navbar__authlink-wrapper">
+                    <span>Welcome <strong>{user.name}</strong></span>
                     <button className="btn btn-primary" onClick={this.onLogoutClick}>Logout</button>
                   </div>
                 )
