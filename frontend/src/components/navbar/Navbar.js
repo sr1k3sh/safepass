@@ -16,7 +16,7 @@ class Navbar extends Component {
     return ( 
       <nav className="navbar navbar-expand-lg navbar-light bg-light sp-navbar">
         <div className="container-fluid sp-navbar__container">
-          <Link to="/" className="navbar-brand">SafePass</Link>
+          <Link to="/" className="navbar-brand sp-navbar__logo"><strong>Safe</strong>Pass</Link>
           
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -45,8 +45,8 @@ class Navbar extends Component {
               else {
                 return (
                   <div>
-                    <Link to="/login" className="me-2"><button className="btn btn-primary">Login</button></Link>
-                    <Link to="/register"><button className="btn btn-secondary">Register</button></Link>
+                    <Link to="/login" className="me-2"><button className="btn btn-outline-primary">Login</button></Link>
+                    <Link to="/register"><button className="btn btn-primary">Register</button></Link>
                   </div>
                 )
               }

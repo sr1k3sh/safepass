@@ -1,9 +1,17 @@
 .sp-navbar{
     padding: var(--spacing-6) 0;
+    position: sticky;
+    top:0;
+    z-index: 1;
     &__container{
         display: flex;
         flex-direction: row;
         justify-content: space-around;
+    }
+
+    &__logo{
+        letter-spacing: 10px;
+        font-size: 24px;
     }
 
     &__navlist{
