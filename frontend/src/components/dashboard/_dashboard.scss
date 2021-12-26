@@ -19,7 +19,7 @@
             flex-direction: row;
         }
     }
-    &__url{
+    &__url,&__username,&__password{
         width: 100%;
         display: flex;
         column-gap: 10px;
@@ -31,28 +31,19 @@
         }
 
         @include media-breakpoint-up(lg){
-            width: 50%;
+            width: 25%;
         }
     }
-    &__password{
-        width: 100%;
-        display: flex;
-        column-gap: 10px;
-        align-items: center;
-        padding: var(--spacing-4) var(--spacing-5);
-        border:0px;
-        & input{
-            width: 100%;
-        }
-        @include media-breakpoint-up(lg){
-            width: 50%;
-        }
-    }
+
     &__action{
-        width: 20%;
+        width: 100%;
         display: block;
         padding: var(--spacing-4) var(--spacing-5);
+        @include media-breakpoint-up(lg){
+            width: 25%;
+        }
     }
+
     &__hidden{
         @include media-breakpoint-up(lg){
             display: none;   

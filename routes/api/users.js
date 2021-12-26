@@ -28,7 +28,8 @@ router.post("/password",(req,res)=>{
         const newData = new Password({
           url: req.body.url,
           password: req.body.password,
-          userId: req.body.userId
+          userId: req.body.userId,
+          userName: req.body.userName
         });
 
         newData

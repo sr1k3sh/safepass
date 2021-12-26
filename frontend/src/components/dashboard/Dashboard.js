@@ -9,6 +9,7 @@ class Dashboard extends Component {
     super();
     this.state ={
       userId: "",
+      userName: "",
       url: "",
       password: "",
       errors: {},
@@ -38,6 +39,7 @@ class Dashboard extends Component {
 
     const newData = {
       userId: this.props.auth.user.name,
+      userName: this.state.userName,
       url: this.state.url,
       password: this.state.password
     }
@@ -64,7 +66,6 @@ class Dashboard extends Component {
   
   render() {
     const { data } = this.props.passwords;
-    console.log(data)
     return (
       <div style={{ height: "75vh" }} className="container valign-wrapper">
         <div className="row">
@@ -75,11 +76,16 @@ class Dashboard extends Component {
                 return (
                   <ul className="sp-passtable">
                     <li className="sp-passtable__item sp-passtable__item--title">
+                      <span className="sp-passtable__username">Username/Email/Phone</span>
                       <span className="sp-passtable__url">URL</span>
                       <span className="sp-passtable__password">Password</span>
                       <span className="sp-passtable__action">Action</span>
                     </li>
                     {data.map((d,i)=><li className="sp-passtable__item" key={i}>
+                    <div className="sp-passtable__url">
+                        <label className="sp-passtable__hidden" htmlFor={"sp_username_"+i}>URL</label>
+                        <input id={"sp_username_"+i} type="url" readOnly value={d.userName} />
+                      </div>
                       <div className="sp-passtable__url">
                         <label className="sp-passtable__hidden" htmlFor={"sp_url_"+i}>URL</label>
                         <input id={"sp_url_"+i} type="url" readOnly value={d.url} />
@@ -99,6 +105,12 @@ class Dashboard extends Component {
 
           <div className="col-12">
             <form onSubmit={this.onSubmit}>
+            <div className="mb-3">
+                <label className="form-label">
+                  UserName/Email/Phonenumber
+                </label>
+                  <input className="form-control" name="userName" type="text" onChange={this.onChange}></input>
+              </div>
               <div className="mb-3">
                 <label className="form-label">
                   url

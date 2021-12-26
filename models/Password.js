@@ -6,6 +6,10 @@ const PasswordSchema = new Schema({
         type:String,
         required:true
     },
+    userName:{
+        type:String,
+        required:true
+    },
     url: {
         type: String,
         required: true
