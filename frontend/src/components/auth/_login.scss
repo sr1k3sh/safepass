@@ -1,0 +1,38 @@
+.sp-login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: url(../../assets/images/gradient.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    &__form{
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-8);
+        max-width: 22rem;
+        width: 100%;
+        background: #ffffff;
+        padding: var(--spacing-8) var(--spacing-9);
+        box-shadow: 1px 2px 16px 0px #f3f3f38a;
+        border-radius: var(--spacing-5);
+    }
+
+    &__form-element{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        & button{
+            width: 100%;
+        }
+    }
+
+    &__links{
+        margin-top: var(--spacing-3);
+    }
+
+    .form-control{
+        background: transparent;
+    }
+}

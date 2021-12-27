@@ -15,33 +15,35 @@ class Register extends Component {
       errors: {}
     };
   }
-componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, state){
     if (nextProps.errors) {
-      this.setState({
+      return ({
         errors: nextProps.errors
-      });
+      })
     }
   }
-onChange = e => {
+
+  onChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
-onSubmit = e => {
+
+  onSubmit = e => {
     e.preventDefault();
-const newUser = {
+    const newUser = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2
     };
-this.props.registerUser(newUser, this.props.history); 
+    this.props.registerUser(newUser, this.props.history); 
   };
-render() {
+  render() {
     const { errors } = this.state;
-return (
+    return (
       <div className="container">
         <div className="row justify-content-center sp-register">
             <div className="col-xl-6 sp-register__background">
-              <img width="100%" src={require('../../assets/images/banner.png')}></img>
+              <img width="100%" src={require('../../assets/images/banner.png')} alt="banner"></img>
             </div>
             <div className="col-xl-6 sp-register__form-wrapper">
               <h2 className="sp-register__title">
