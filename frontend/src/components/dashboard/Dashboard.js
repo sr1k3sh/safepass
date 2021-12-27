@@ -28,21 +28,19 @@ class Dashboard extends Component {
 
   componentDidMount(){
     this.props.getPasswords({
-      userId:this.props.auth.user.name,
+      userId:this.props.auth.user.id,
     });
   } 
 
   
   onChange = e => {
-    console.log('test')
     this.setState({ [e.target.name]: e.target.value });
   };
   
   onSubmit = e =>{
     e.preventDefault();
-
     const newData = {
-      userId: this.props.auth.user.name,
+      userId: this.props.auth.user.id,
       userName: this.state.userName,
       url: this.state.url,
       password: this.state.password
@@ -61,7 +59,7 @@ class Dashboard extends Component {
   removePassword = (e) =>{
     e.preventDefault();
     const data = {
-      url: e.target.attributes.getNamedItem('data-url').value,
+      url: e.currentTarget.attributes.getNamedItem('data-url').value,
       userId: this.props.auth.user.name,
     }
     e.target.closest(".sp-passtable__item").remove();
@@ -93,7 +91,7 @@ class Dashboard extends Component {
         </div>
         <div className="row">
           <div className="col-12"> 
-            <PasswordList data={data}></PasswordList>
+            <PasswordList data={data} removePassword={this.removePassword}></PasswordList>
           </div>
           
           
