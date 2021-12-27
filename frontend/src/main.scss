@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import './sass/variables';
 @import "../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../node_modules/bootstrap/scss/variables";
+@import './sass/variables';
 @import "../node_modules/bootstrap/scss/mixins";
 
 // 4. Include any optional Bootstrap components as you like
@@ -25,4 +25,5 @@
 @import './components/navbar/navbar';
 @import './components/banner/banner';
 @import './components/dashboard/dashboard';
+@import './components/auth/register';
 

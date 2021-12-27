@@ -17,15 +17,15 @@ export default class PasswordList extends Component {
                             {this.props.data.map((d,i)=><li className="sp-passtable__item" key={i}>
                             <div className="sp-passtable__url">
                                 <label className="sp-passtable__hidden" htmlFor={"sp_username_"+i}>URL</label>
-                                <input id={"sp_username_"+i} type="url" readOnly value={d.userName} />
+                                <input className='form-control' id={"sp_username_"+i} type="url" readOnly value={d.userName} />
                             </div>
                             <div className="sp-passtable__url">
                                 <label className="sp-passtable__hidden" htmlFor={"sp_url_"+i}>URL</label>
-                                <input id={"sp_url_"+i} type="url" readOnly value={d.url} />
+                                <input className='form-control' id={"sp_url_"+i} type="url" readOnly value={d.url} />
                             </div>
                             <div className="sp-passtable__password">
                                 <label className="sp-passtable__hidden" htmlFor={"sp_password_"+i}>Password</label>
-                                <input id={"sp_password_"+i} type="password" readOnly value={d.password}/>
+                                <input className='form-control' id={"sp_password_"+i} type="password" readOnly value={d.password}/>
                             </div>
                             <div className="sp-passtable__action">
                                 <button onClick={this.removePassword} data-url={d.url} className="btn btn-outline-danger sp-passtable__btn sp-passtable__btn--round" aria-label="remove ">

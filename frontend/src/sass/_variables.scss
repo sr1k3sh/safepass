@@ -11,9 +11,28 @@
     --spacing-10: 3rem; //48px;
     --spacing-11: 3.5rem; //56px;
     --spacing-12: 4rem; //64px;
-    --spacing-13: 4.5rem //72px;
-    --spacing-14: 5rem //80px;
-}
+    --spacing-13: 4.5rem; //72px;
+    --spacing-14: 5rem; //80px;
+    --brand: #264653;
+    --persian-green: #2A9D8F;
+    --orange-yellow: #E9C46A;
+    --sandy-brow: #F4A261;
+    --burnt-sienna: #E76F51;
+} 
+
+$theme-colors: (
+  "primary":    #2A9D8F,
+  "secondary":  #F4A261,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       #264653
+);
+
+$body-color: #003049;
+
 $font-family-base:'Poppins', sans-serif;
 $display-font-sizes: (
   1: 5rem,

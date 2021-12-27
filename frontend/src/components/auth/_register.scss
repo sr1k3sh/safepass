@@ -1,0 +1,54 @@
+.sp-register{
+    background: #ffffff;
+    box-shadow: 1px 2px 5px 5px #f3f3f38a;
+    border-radius: var(--spacing-7);
+    margin-top: var(--spacing-8);
+    overflow: hidden;
+    
+    &__background{
+        background: var(--bs-primary);
+    }
+    
+    &__form-wrapper{
+        padding: var(--spacing-9) var(--spacing-8);
+    }
+
+    &__form{
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-8);
+    }
+
+    &__button-wrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-4);
+    }
+    &__reg-btn{
+        display: block;
+    }
+
+    &__title{
+        text-align: center;
+        letter-spacing: 0.175rem;
+    }
+
+    &__bold{
+        color: var(--bs-primary);
+    }
+}
+
+.red-text{
+    color: var(--bs-danger);
+    width: 100%;
+    margin-top: var(--spacing-2);
+    font-size: var(--spacing-4);
+}
+.form-control.invalid{
+    border-color: var(--bs-danger);
+}
+
+.form-label{
+    letter-spacing: var(--spacing-1);
+}

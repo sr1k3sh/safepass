@@ -38,7 +38,7 @@ class Navbar extends Component {
                 return (
                   <div className="sp-navbar__authlink-wrapper">
                     <span>Welcome <strong>{user.name}</strong></span>
-                    <button className="btn btn-primary" onClick={this.onLogoutClick}>Logout</button>
+                    <button className="btn btn-primary text-white" onClick={this.onLogoutClick}>Logout</button>
                   </div>
                 )
               } 
@@ -46,7 +46,7 @@ class Navbar extends Component {
                 return (
                   <div>
                     <Link to="/login" className="me-2"><button className="btn btn-outline-primary">Login</button></Link>
-                    <Link to="/register"><button className="btn btn-primary">Register</button></Link>
+                    <Link to="/register"><button className="btn btn-primary text-white">Register</button></Link>
                   </div>
                 )
               }
