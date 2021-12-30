@@ -1,0 +1,128 @@
+.rs-invoice{
+
+    &__form{
+        border-radius: 8px;
+        padding: 20px 16px;
+        box-shadow: -1px 1px 5px 2px #c3c3c3cf;
+    }
+
+    &__row{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        &:not(:last-child){
+            margin-bottom: 20px;
+        }
+    }
+
+    &__form-element{
+        display: flex;
+        flex-direction: column;
+        &--row{
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            column-gap: 8px;
+            & .form-control{
+                width: 50%;
+            }
+            & .form-label{
+                width: 50%;
+                text-align: right;
+                margin-bottom: 0;
+            }
+
+            &:not(:last-child){
+                margin-bottom: 4px;
+            }
+        }
+    }
+
+    &__upload-wrapper{
+        display: flex;
+        width: 180px;
+        height: 150px;
+        align-items: center;
+        justify-content: center;
+        background-color: grey;
+        cursor: pointer;
+        background: #f5f5f5;
+        border-radius: 4px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,.1);
+        & label{
+            padding: 20px;
+        }
+    }
+
+    &__upload-input{
+        display: none;
+    }
+
+    &__container{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__sub-container{
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        .form-label{
+            text-align: left;
+        }
+    }
+
+    &__hidden{
+        display: none;
+    }
+
+    &__list-wrapper,&__header-list{
+        display: flex;
+        list-style: none;
+        flex-direction: column;
+        padding: 0;
+        width: 100%;
+    }
+    &__header-list{
+        flex-direction: row;
+        background-color: grey;
+        padding: 6px 10px;
+        border-radius: 3px;
+    }
+
+    &__header-item{
+        color: #f5f5f5;
+    }
+
+    &__item{
+        width: 55%;
+        text-align: left;
+    }
+
+    &__quantity,&__rate,&__amount{
+        width: 15%;
+        text-align: center;
+    }
+
+    &__body-list{
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__body-item{
+        list-style: none;
+        & input{
+            width: 100%;
+        }
+    }
+
+    &__span-text{
+        width: 50%;
+        text-align: right;
+    }
+}

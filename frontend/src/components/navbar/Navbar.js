@@ -32,6 +32,9 @@ class Navbar extends Component {
                   )
                 } 
               })()}
+              <li className="nav-item sp-navbar__navitem">
+                <Link to="/invoice">Invoice</Link>
+              </li>
             </ul>
             {(() => {
               if (user.id) {
