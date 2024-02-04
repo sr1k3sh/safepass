@@ -18,11 +18,11 @@ export const authOptions = {
 
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  // callbacks: {
-  //   async session({ session  }) {
-  //     return session;
-  //   },
-  // },
+  callbacks: {
+    async session({ session }:any) {
+      return session;
+    },
+  },
   adapter: PrismaAdapter(prisma),
   // secret: process.env.JWT_SECRET,
   // callbacks: {
