@@ -50,7 +50,7 @@ const Header: React.FC = () => {
                   </span>
                   {
                     session?.user?.image ?
-                      <Image className='aspect-square w-12 h-12 rounded-full' src={session?.user?.image} alt={session?.user?.name} width={50} height={50} />
+                      <Image className='aspect-square w-12 h-12 rounded-full' src={session?.user?.image} alt={session?.user?.name || ''} width={50} height={50} />
                       :
                       <span className='flex justify-center items-center aspect-square w-12 h-12 rounded-full bg-slate-400'>{session?.user.name?.charAt(0)}</span>
                   }
