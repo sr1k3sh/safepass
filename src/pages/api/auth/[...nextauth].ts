@@ -17,6 +17,7 @@ export const authOptions = {
     })
 
   ],
+  secret: process.env.SECRECT,
   // callbacks: {
   //   async session({ session  }) {
   //     return session;
