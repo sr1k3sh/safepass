@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { useRouter } from 'next/router'
-import { getServerSession } from 'next-auth'
+import { AuthOptions, getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import DashboardHeader from '@/components/dashboard/dashboard-header'
 import DashboardSidebar from '@/components/dashboard/dashboard-sidebar'
@@ -16,7 +16,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import RootLayout from '@/pages/layout'
 import { toast } from '@/components/ui/use-toast'
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 type Props = {}
+
+interface ServerSideProps {
+  session: any; // Replace any with the actual type of your data
+}
 
 export default function Create({ }: Props) {
   const { data: session, status } = useSession()
@@ -238,14 +243,14 @@ export default function Create({ }: Props) {
   return <></>
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<ServerSideProps>> {
+  const { req, res } = context;
+
   return {
     props: {
-      session: await getServerSession(
-        context.req,
-        context.res,
-        authOptions
-      ),
+      session: await getServerSession(req, res, authOptions),
     },
-  }
+  };
 }

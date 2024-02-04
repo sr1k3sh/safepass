@@ -17,11 +17,11 @@ export const authOptions = {
     })
 
   ],
-  callbacks: {
-    async session({ session, token }) {
-      return session;
-    },
-  },
+  // callbacks: {
+  //   async session({ session  }) {
+  //     return session;
+  //   },
+  // },
   adapter: PrismaAdapter(prisma),
   // secret: process.env.JWT_SECRET,
   // callbacks: {

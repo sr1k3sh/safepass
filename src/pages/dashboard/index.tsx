@@ -25,7 +25,9 @@ import { DropdownMenuContent, DropdownMenu, DropdownMenuItem, DropdownMenuLabel,
 import Link from 'next/link'
 import RootLayout from '@/pages/layout'
 
-type Props = {}
+type Props = {
+  data: any
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
@@ -165,7 +167,7 @@ const Dashboard: React.FC<Props> = (props) => {
                   <h3 className='font-bold text-lg p-4'>Logins</h3>
                   <div className='flex flex-col gap-4 mt-4 overflow-auto h-full'>
                     {
-                      data && data.length && data.map((pass, i) => (
+                      data && data.length && data.map((pass:any, i:number) => (
                         <div key={i} className={`flex flex-row items-center gap-4 p-4 rounded-lg hover:bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
                           <div className='flex flex-col'>
                             <Avatar>
@@ -263,8 +265,9 @@ const Dashboard: React.FC<Props> = (props) => {
                                     isShowPassword ?
                                       data[0].password
                                       :
-                                      data[0].password.split('').map((_, i) => (
-                                        <span key={i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
+                                      data[0].password.split('').map((data:any, i:number) => (
+
+                                        <span key={data+i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
                                       ))
                                   }
                                 </span>
