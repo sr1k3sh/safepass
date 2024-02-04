@@ -53,7 +53,6 @@ export default function Create({ }: Props) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // const body = { title, content };
     console.log(values)
     const body = {
       category: values.category,
