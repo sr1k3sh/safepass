@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { FaQuestion } from '@react-icons/all-files/fa/FaQuestion'
@@ -6,13 +6,17 @@ import { FaBell } from '@react-icons/all-files/fa/FaBell'
 import { FaPen } from '@react-icons/all-files/fa/FaPen'
 import { signOut, useSession } from 'next-auth/react'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { FiMenu } from '@react-icons/all-files/fi/FiMenu'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import DashboardSidebar from '@/components/dashboard/dashboard-sidebar'
+import { AppProvider } from '@/pages/_app'
 
 type Props = {}
 
 export default function DashboardHeader({ }: Props) {
   const { data:session } = useSession()
+  const { isMobile } = useContext(AppProvider)
 
   const onLogout = () => {
     signOut();
@@ -23,8 +27,20 @@ export default function DashboardHeader({ }: Props) {
   }
 
   return (
-    <nav className='flex flex-row justify-between items-center px-4'>
-      <div className='w-1/2'>
+    <nav className='flex flex-row justify-between items-center'>
+      <div className='w-1/2 flex flex-row items-center'>
+        {
+          isMobile &&
+          <Sheet
+          >
+            <SheetTrigger className='bg-primary p-2 flex justify-center items-center rounded-lg me-2'>
+              <FiMenu size={24} color={'white'}/>
+            </SheetTrigger>
+            <SheetContent side={'left'} className='p-0 bg-'>
+              <DashboardSidebar></DashboardSidebar>
+            </SheetContent>
+          </Sheet>
+        }
         <Input type='text' placeholder='Search' />
       </div>
       <ul className='flex flex-row items-center gap-2'>
