@@ -27,6 +27,7 @@ import RootLayout from './layout'
 import { Encrypter } from '@/lib/crypto'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { AppProvider } from './_app'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 type Props = {
   data: any
@@ -123,10 +124,14 @@ const Dashboard: React.FC<Props> = (props) => {
   const data = props?.data
 
   useEffect(() => {
-    if (data && data.length) {
-      setCurrentPass(data[0])
+    if (data && data.length ) {
+      if(isMobile) {
+        setCurrentPass(null)
+      } else {
+        setCurrentPass(data[0])
+      }
     }
-  }, [data])
+  }, [data, isMobile])
 
   const onClickShowPass = () => {
     setShowPassword(prev => !prev)
@@ -189,130 +194,128 @@ const Dashboard: React.FC<Props> = (props) => {
                     <div>
                       <DashboardHeader />
                     </div>
-                    <div className='flex flex-row ps-0 p-4 mt-8 gap-4 overflow-hidden h-dvh'>
-                      <div className='flex flex-col w-2/5 text-foreground'>
-                        <h3 className='font-bold text-lg p-4'>Logins</h3>
+                    <div className='flex flex-row ps-0 md:p-4 mt-8 gap-4 overflow-hidden h-dvh'>
+                      <div className='flex flex-col w-full text-foreground'>
+                        <h3 className='font-bold text-lg p-4 ps-0'>Logins</h3>
                         <div className='flex flex-col gap-4 mt-4 overflow-auto h-full'>
                           {
                             data && data.length && data.map((pass: any, i: number) => (
-                              <div key={i} className={`flex flex-row items-center gap-4 p-4 rounded-lg hover:bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
-                                <div className='flex flex-col'>
-                                  <Avatar>
-                                    <AvatarImage src={pass?.image} />
-                                    <AvatarFallback className=' font-bold uppercase'>{pass.title.charAt(0)}</AvatarFallback>
-                                  </Avatar>
-                                </div>
-                                <div className='flex flex-col'>
-                                  <h3 className='text-sm font-semibold text-foreground'>{pass.title}</h3>
-                                  <div>
-                                    <span className='text-xs text-muted-foreground'>{pass.username}</span>
+                              <Sheet key={pass + i}>
+                                <SheetTrigger>
+                                  <div key={i} className={`flex flex-row items-center gap-4 p-4 rounded-lg hover:bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
+                                    <div className='flex flex-col'>
+                                      <Avatar>
+                                        <AvatarImage src={pass?.image} />
+                                        <AvatarFallback className=' font-bold uppercase'>{pass.title.charAt(0)}</AvatarFallback>
+                                      </Avatar>
+                                    </div>
+                                    <div className='flex flex-col'>
+                                      <h3 className='text-sm font-semibold text-foreground'>{pass.title}</h3>
+                                      <span className='text-xs text-muted-foreground text-left'>{pass.username}</span>
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
+                                </SheetTrigger>
+                                <SheetContent>
+                                  {
+                                    currentPass &&
+                                    <>
+                                      <div className='flex flex-row justify-between items-start mt-4'>
+                                        <div className='flex flex-col items-start justify-start gap-4'>
+                                          <div className={`p-2 rounded-lg ${currentCategoryStyle(currentPass.category).bg}`}>
+                                            <Avatar>
+                                              <AvatarImage src={currentPass.image} />
+                                              <AvatarFallback>{currentPass.username.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                          </div>
+                                        </div>
+                                        <div className='flex flex-row items-center'>
+                                          <Button size={'icon'} variant={'ghost'}>
+                                            <FiStar />
+                                          </Button>
+                                          <Button size={'icon'} variant={'ghost'}>
+                                            <FiEdit />
+                                          </Button>
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                              <Button size={'icon'} variant={'ghost'}>
+                                                <FiMenu />
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                              <DropdownMenuItem>
+                                                <div className='flex flex-row items-center gap-2' onClick={() => onDeletePass(currentPass.id)}>
+                                                  <FiDelete />
+                                                  Delete
+                                                </div>
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem>
+                                                <div className='flex flex-row items-center gap-2'>
+                                                  <FiShare />
+                                                  Share
+                                                </div>
+                                              </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+                                        </div>
+                                      </div>
+                                      <div className='flex flex-col gap-6 mt-4'>
+                                        <div className='flex flex-col'>
+                                          <div className='flex flex-col gap-1 w-full'>
+                                            <h3 className='text-sm font-semibold text-foreground mb-2'>{currentPass.title}</h3>
+                                            <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge>
+                                          </div>
+                                          <div className='flex flex-row justify-between items-start mt-8'>
+                                            <div className='flex flex-col gap-2'>
+                                              <span className='text-xs text-muted-foreground font-normal tracking-wide'>Website</span>
+                                              <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span>
+                                            </div>
+                                            <Link href={currentPass.url} passHref={true} target='_blank'>
+                                              <FiExternalLink />
+                                            </Link>
+                                          </div>
+                                        </div>
+                                        <div className='flex flex-col gap-2'>
+                                          <span className='text-xs text-muted-foreground font-normal tracking-wide'>Username</span>
+                                          <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span>
+                                        </div>
+                                        <div className='flex flex-col'>
+                                          <div className='flex flex-row justify-between items-center'>
+                                            <div className='flex flex-col gap-2'>
+                                              <span className='text-xs text-muted-foreground font-normal tracking-wide'>Password</span>
+                                              <span className='text-xs text-foreground font-normal tracking-wide flex flex-row gap-2'>
+                                                {
+                                                  isShowPassword ?
+                                                    currentPass.password
+                                                    :
+                                                    [1, 2, 3, 4, 5, 6, 7, 8].map((data: any, i: number) => (
+                                                      <span key={data + i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
+                                                    ))
+                                                }
+                                              </span>
+                                            </div>
+                                            <div className='flex flex-row gap-1'>
+                                              <Button onClick={onClickCopyPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+                                                <FiCopy />
+                                              </Button>
+                                              <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+                                                {
+                                                  isShowPassword ?
+                                                    <FiEye /> :
+                                                    <FiEyeOff />
+                                                }
+                                              </Button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  }
+                                </SheetContent>
+                              </Sheet>
                             ))
                           }
                         </div>
-                      </div>
-                      <div className='flex flex-col w-3/5'>
-                        {
-                          currentPass &&
-                          <Card className='bg-secondary'>
-                            <CardHeader>
-                              <div className='flex flex-row justify-between items-start'>
-                                <div className='flex flex-row items-center justify-start gap-4'>
-                                  <div className={` p-2 rounded-lg ${currentCategoryStyle(currentPass.category).bg}`}>
-                                    <Avatar>
-                                      <AvatarImage src={currentPass.image} />
-                                      <AvatarFallback>{currentPass.username.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                  </div>
-                                  <div className='flex flex-col gap-1'>
-                                    <h3 className='text-sm font-semibold text-foreground'>{currentPass.title}</h3>
-                                    <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge>
-                                  </div>
-                                </div>
-                                <div className='flex flex-row items-center'>
-                                  <Button size={'icon'} variant={'ghost'}>
-                                    <FiStar />
-                                  </Button>
-                                  <Button size={'icon'} variant={'ghost'}>
-                                    <FiEdit />
-                                  </Button>
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger>
-                                      <Button size={'icon'} variant={'ghost'}>
-                                        <FiMenu />
-                                      </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                      <DropdownMenuItem>
-                                        <div className='flex flex-row items-center gap-2' onClick={() => onDeletePass(currentPass.id)}>
-                                          <FiDelete />
-                                          Delete
-                                        </div>
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem>
-                                        <div className='flex flex-row items-center gap-2'>
-                                          <FiShare />
-                                          Share
-                                        </div>
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                </div>
-                              </div>
-                            </CardHeader>
-                            <CardContent className='mt-8'>
-                              <div className='flex flex-col gap-6'>
-                                <div className='flex flex-col'>
-                                  <div className='flex flex-row justify-between items-start'>
-                                    <div className='flex flex-col gap-2'>
-                                      <span className='text-xs text-muted-foreground font-normal tracking-wide'>Website</span>
-                                      <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span>
-                                    </div>
-                                    <Link href={currentPass.url} passHref={true} target='_blank'>
-                                      <FiExternalLink />
-                                    </Link>
-                                  </div>
-                                </div>
-                                <div className='flex flex-col gap-2'>
-                                  <span className='text-xs text-muted-foreground font-normal tracking-wide'>Username</span>
-                                  <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span>
-                                </div>
-                                <div className='flex flex-col'>
-                                  <div className='flex flex-row justify-between items-center'>
-                                    <div className='flex flex-col gap-2'>
-                                      <span className='text-xs text-muted-foreground font-normal tracking-wide'>Password</span>
-                                      <span className='text-xs text-foreground font-normal tracking-wide flex flex-row gap-2'>
-                                        {
-                                          isShowPassword ?
-                                            currentPass.password
-                                            :
-                                            [1, 2, 3, 4, 5, 6, 7, 8].map((data: any, i: number) => (
-                                              <span key={data + i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
-                                            ))
-                                        }
-                                      </span>
-                                    </div>
-                                    <div className='flex flex-row gap-1'>
-                                      <Button onClick={onClickCopyPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
-                                        <FiCopy />
-                                      </Button>
-                                      <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
-                                        {
-                                          isShowPassword ?
-                                            <FiEye /> :
-                                            <FiEyeOff />
-                                        }
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        }
                       </div>
                     </div>
                   </div>
@@ -324,7 +327,7 @@ const Dashboard: React.FC<Props> = (props) => {
                   direction="horizontal"
                   className="min-h-[200px] rounded-lg border"
                 >
-                  <ResizablePanel collapsible={true} minSize={4} defaultSize={20} maxSize={25}>
+                  <ResizablePanel minSize={4} defaultSize={20} maxSize={25}>
                     <DashboardSidebar showJustIconSidebar={showJustIconSidebar} />
                   </ResizablePanel>
                   <ResizableHandle withHandle />
