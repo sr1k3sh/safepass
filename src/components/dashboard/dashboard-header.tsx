@@ -13,11 +13,9 @@ type Props = {}
 
 export default function DashboardHeader({ }: Props) {
   const { data:session } = useSession()
-  const router = useRouter()
 
   const onLogout = () => {
-    signOut()
-    router.push('/')
+    signOut();
     try{
     } catch (error) {
       console.error(error)
@@ -43,13 +41,21 @@ export default function DashboardHeader({ }: Props) {
         </li>
         <li className='flex'>
           {
-            session?.user?.image &&
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src={session?.user?.image} />
-                  <AvatarFallback>{session?.user.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
+                {
+                  session?.user?.image ?
+                  <Avatar>
+                    <AvatarImage src={session?.user?.image} />
+                    <AvatarFallback>{session?.user.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  :
+                  <div className='w-8 h-8 rounded-full bg-primary flex justify-center items-center text-foreground font-bold uppercase'>
+                    {
+                      session?.user?.name?.charAt(0)
+                    }
+                  </div>
+                }
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>

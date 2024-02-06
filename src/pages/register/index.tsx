@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 import RootLayout from '../layout'
 import { Card } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 
 import { z } from 'zod'
@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { Cormorant_SC } from 'next/font/google'
+import { toast } from '@/components/ui/use-toast'
 
 const font = Cormorant_SC({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
@@ -24,6 +25,7 @@ export default function Login({ }: Props) {
   const router = useRouter()
 
   const formSchema = z.object({
+    name: z.string().min(2).max(40),
     email: z.string().email(),
     password: z.string().min(8),
   })
@@ -31,32 +33,47 @@ export default function Login({ }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // const body = { title, content };
     const body = {
       email: values.email,
       password: values.password,
     }
-
-    const res = await signIn('credentials', {
-      email: body.email,
-      password: body.password,
-      redirect: false
-    })
-
-    if(res?.ok) {
-      router.push('/')
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if(res.ok) {
+        toast({
+          title: 'Account created',
+          description: 'Your account has been created successfully!',
+        })
+        router.push('/login')
+      } else {
+        const err = await res.json()
+        toast({
+          title: 'Error creating account',
+          description: err.error,
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Error creating account',
+        description: 'An error occurred while creating your account. Please try again later.',
+      })
     }
+
   }
 
   useEffect(() => {
+    console.log(session)
     if (session && session.user) {
       router.push('/')
     }
@@ -64,24 +81,10 @@ export default function Login({ }: Props) {
 
   return (
     <RootLayout themeMode='light'>
-      <Image className='z-0' src={'/login.png'} alt='login' objectFit='cover' fill />
-      <section className='container m-auto flex flex-row justify-center items-center h-dvh p-8 relative z-10'>
-        <Card className='flex flex-row justify-center overflow-hidden w-full bg-transparent'>
-          <div className='flex w-1/2 backdrop-blur-lg'>
-            <div className='flex flex-col relative h-full w-full'>
-              <div className='relative z-10 flex flex-col justify-between p-8 max-w-96 h-full'>
-                <div>
-                  <h1 className='hidden'>SafePass</h1>
-                  <h2 className='text-lg font-thin uppercase text-white'>A wise quote</h2>
-                </div>
-                <div className=''>
-                  <h3 className={`text-6xl font-normal tracking-wide leading-none mt-32 mb-4 uppercase text-white ${font.className}`}>Remember your informations</h3>
-                  <p className='font-thin text-sm text-white'>SafePass is a password manager that allows you to store your passwords in a safe place. It is a free and open-source software.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='flex flex-col w-1/2 p-8 px-16 items-center justify-between bg-background'>
+      <Image className='z-0 h-full' src={'/login.png'} alt='login' objectFit='cover' fill />
+      <section className='container m-auto flex flex-row justify-center items-center md:h-dvh p-8 relative z-10'>
+        <Card className='flex flex-col-reverse md:flex-row justify-center overflow-hidden w-full bg-transparent'>
+          <div className='flex flex-col w-full md:w-1/2 p-4 md:p-8 px-8 md:px-16 items-center justify-between bg-background'>
             <h2 className={`text-2xl tracking-wider uppercase`}>
               <svg width="129" height="69" viewBox="0 0 129 69" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M56.44 61H47.72V60.68C48.1733 60.68 48.52 60.5733 48.76 60.36C49.0266 60.1467 49.24 59.7333 49.4 59.12C49.56 58.48 49.6533 57.6667 49.68 56.68C49.7333 55.6933 49.76 54.3333 49.76 52.6V41.4C49.76 39.1067 49.7066 37.4133 49.6 36.32C49.4933 35.2267 49.2933 34.4533 49 34C48.7333 33.5467 48.3066 33.32 47.72 33.32V33H60.4C61.3333 33 62.2933 33.1333 63.28 33.4C64.2933 33.64 65.2666 34.0133 66.2 34.52C67.1333 35 67.9066 35.68 68.52 36.56C69.1333 37.4133 69.44 38.3733 69.44 39.44C69.44 40.48 69.1333 41.4267 68.52 42.28C67.9066 43.1333 67.1333 43.8133 66.2 44.32C65.2666 44.8267 64.2933 45.2267 63.28 45.52C62.2666 45.7867 61.3066 45.92 60.4 45.92H54.4V52.6C54.4 54.8933 54.4533 56.5867 54.56 57.68C54.6666 58.7733 54.8533 59.5467 55.12 60C55.4133 60.4533 55.8533 60.68 56.44 60.68V61ZM59.28 33.64H54.4V45.24H59.28C59.76 45.24 60.2933 45.12 60.88 44.88C61.4933 44.64 62.0933 44.3067 62.68 43.88C63.2933 43.4267 63.8 42.8133 64.2 42.04C64.6 41.2667 64.8 40.4 64.8 39.44C64.8 37.6 64.2266 36.1733 63.08 35.16C61.96 34.1467 60.6933 33.64 59.28 33.64ZM79.305 39.48C82.1583 39.48 84.305 40.1333 85.745 41.44C87.2116 42.7467 87.945 44.8 87.945 47.6V61L83.345 58.48C82.065 60.6667 79.9716 61.76 77.065 61.76C76.105 61.76 75.1316 61.6133 74.145 61.32C73.185 61.0533 72.2516 60.6533 71.345 60.12C70.465 59.5867 69.745 58.88 69.185 58C68.625 57.0933 68.345 56.08 68.345 54.96C68.345 53.76 68.625 52.6933 69.185 51.76C69.745 50.8267 70.465 50.0933 71.345 49.56C72.2516 49.0267 73.185 48.64 74.145 48.4C75.1316 48.1333 76.105 48 77.065 48C79.305 48 81.3983 48.4133 83.345 49.24V47.6C83.345 42.6667 82.065 40.2 79.505 40.2C78.9983 40.2 78.4916 40.4 77.985 40.8C77.505 41.1733 77.0783 41.6667 76.705 42.28C76.3583 42.8667 76.0916 43.3467 75.905 43.72C75.7183 44.0933 75.545 44.4667 75.385 44.84C75.225 45.2667 74.945 45.6133 74.545 45.88C74.145 46.1467 73.705 46.28 73.225 46.28C72.6116 46.28 72.0783 46.0533 71.625 45.6C71.1716 45.1467 70.945 44.6 70.945 43.96C70.945 43.24 71.265 42.5733 71.905 41.96C72.5716 41.3467 73.3716 40.88 74.305 40.56C75.265 40.2133 76.185 39.9467 77.065 39.76C77.945 39.5733 78.6916 39.48 79.305 39.48ZM83.345 57.64V49.92C81.4783 49.04 79.625 48.72 77.785 48.96C76.5316 49.0933 75.4516 49.6933 74.545 50.76C73.6383 51.8267 73.225 53.12 73.305 54.64C73.4116 56.6667 74.0783 58.2133 75.305 59.28C76.5583 60.3467 77.9716 60.7333 79.545 60.44C80.425 60.28 81.1983 59.9467 81.865 59.44C82.5583 58.9067 83.0516 58.3067 83.345 57.64ZM118.417 46.76C120.87 46.76 122.95 47.4933 124.657 48.96C126.39 50.4267 127.257 52.1867 127.257 54.24C127.257 56.4 126.577 58.2 125.217 59.64C123.884 61.0533 122.03 61.76 119.657 61.76C118.777 61.76 117.964 61.6667 117.217 61.48C116.47 61.2933 115.83 61.0667 115.297 60.8C114.764 60.5333 114.257 60.16 113.777 59.68C113.324 59.2 112.937 58.7467 112.617 58.32C112.324 57.8933 112.004 57.3467 111.657 56.68C111.337 55.9867 111.084 55.4 110.897 54.92C110.71 54.4133 110.457 53.76 110.137 52.96C109.844 52.16 109.604 51.52 109.417 51.04C108.804 49.5733 108.23 48.32 107.697 47.28C107.19 46.24 106.604 45.24 105.937 44.28C105.27 43.32 104.577 42.56 103.857 42C103.137 41.4133 102.324 40.96 101.417 40.64C100.51 40.32 99.4972 40.16 98.3772 40.16C96.9638 40.16 95.7505 40.48 94.7372 41.12C93.7238 41.76 93.2172 42.5333 93.2172 43.44C93.2172 44.4267 93.7505 45.2267 94.8172 45.84C95.9105 46.4533 97.6038 46.76 99.8972 46.76C101.497 46.76 102.977 47.0933 104.337 47.76C105.697 48.4267 106.777 49.3333 107.577 50.48C108.377 51.6267 108.777 52.88 108.777 54.24C108.777 56.32 107.91 58.0933 106.177 59.56C104.444 61.0267 102.35 61.76 99.8972 61.76V61.72V61.76C97.2572 61.76 94.3372 61.5067 91.1372 61V52.92H91.4572C91.4572 54.6 91.9238 56.08 92.8572 57.36C93.8172 58.6133 95.0172 59.5467 96.4572 60.16C97.8972 60.7733 99.4572 61.08 101.137 61.08C102.63 61.08 103.91 60.6267 104.977 59.72C106.07 58.8133 106.617 57.72 106.617 56.44C106.617 55.5867 106.364 54.8133 105.857 54.12C105.377 53.4267 104.604 52.88 103.537 52.48C102.47 52.0533 101.164 51.84 99.6172 51.84C97.2705 51.84 95.2572 51.24 93.5772 50.04C91.8972 48.84 91.0572 47.3867 91.0572 45.68C91.0572 43.8933 91.7238 42.4133 93.0572 41.24C94.4172 40.0667 96.2438 39.48 98.5372 39.48C99.3905 39.48 100.204 39.6 100.977 39.84C101.777 40.08 102.484 40.3867 103.097 40.76C103.71 41.1067 104.31 41.5867 104.897 42.2C105.484 42.8133 105.99 43.4133 106.417 44C106.844 44.56 107.27 45.2667 107.697 46.12C108.15 46.9733 108.524 47.7333 108.817 48.4C109.137 49.04 109.484 49.8267 109.857 50.76C110.044 51.1867 110.284 51.76 110.577 52.48C110.87 53.2 111.084 53.7467 111.217 54.12C111.377 54.4933 111.59 54.9867 111.857 55.6C112.15 56.1867 112.39 56.64 112.577 56.96C112.764 57.28 113.004 57.6667 113.297 58.12C113.617 58.5733 113.91 58.92 114.177 59.16C114.47 59.4 114.817 59.6667 115.217 59.96C115.617 60.2533 116.03 60.4667 116.457 60.6C116.884 60.7333 117.364 60.8533 117.897 60.96C118.43 61.04 119.017 61.08 119.657 61.08C121.15 61.08 122.43 60.6267 123.497 59.72C124.564 58.8133 125.097 57.72 125.097 56.44C125.097 55.5867 124.857 54.8133 124.377 54.12C123.897 53.4267 123.124 52.88 122.057 52.48C120.99 52.0533 119.684 51.84 118.137 51.84C116.99 51.84 115.884 51.68 114.817 51.36C113.75 51.0133 112.83 50.5733 112.057 50.04C111.31 49.48 110.71 48.8267 110.257 48.08C109.804 47.3067 109.577 46.5067 109.577 45.68C109.577 44.8267 109.804 44.0267 110.257 43.28C110.71 42.5067 111.31 41.84 112.057 41.28C112.83 40.72 113.75 40.28 114.817 39.96C115.884 39.64 116.99 39.48 118.137 39.48C118.644 39.48 119.097 39.4933 119.497 39.52C119.924 39.52 120.337 39.5333 120.737 39.56C121.137 39.5867 121.457 39.6133 121.697 39.64C121.964 39.64 122.31 39.68 122.737 39.76C123.19 39.8133 123.51 39.8533 123.697 39.88C123.884 39.9067 124.244 39.96 124.777 40.04C125.337 40.12 125.724 40.1733 125.937 40.2V48.28H125.617C125.617 45.7467 124.79 43.76 123.137 42.32C121.51 40.88 119.43 40.16 116.897 40.16C115.484 40.16 114.257 40.48 113.217 41.12C112.204 41.76 111.697 42.5333 111.697 43.44C111.697 44.4267 112.244 45.2267 113.337 45.84C114.43 46.4533 116.124 46.76 118.417 46.76Z" fill="black" />
@@ -96,10 +99,24 @@ export default function Login({ }: Props) {
               </svg>
             </h2>
             <div className='flex flex-col items-center w-full max-w-96 mt-16'>
-              <h3 className={`text-4xl mb-1 ${font.className}`}>Welcome Back</h3>
-              <p className='flex text-xs text-center mb-8'>Enter your email and password to access your account</p>
+              <h3 className={`text-3xl md:text-4xl mb-1 ${font.className}`}>Create an account</h3>
+              <p className='flex text-xs text-center mb-6'>Start saving your data from now</p>
+
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col w-full gap-4'>
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Your name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="email"
@@ -122,20 +139,34 @@ export default function Login({ }: Props) {
                         <FormControl>
                           <Input placeholder="*******" type='password' {...field} />
                         </FormControl>
+                        <FormDescription>Must be at least 8 characters long</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <Button className='mt-4' type="submit">Login</Button>
+                  <Button className='mt-4' type="submit">Register</Button>
                 </form>
               </Form>
-              <Button className='mt-2 text-sm font-semibold' variant={'link'} onClick={() => signIn('google')}>Sign in With Google</Button>
-
+              <Button className='text-sm font-semibold' variant={'link'} onClick={() => signIn('google')}>Sign up With Google</Button>
             </div>
-            <div className='mt-32 flex flex-row items-center text-center'>
-              <p className='text-xs'>{`Don't have an account?`}</p>
-              <Link className='text-xs font-bold ms-2' href="/register">Register</Link>
+            <div className='mt-24 flex flex-row items-center text-center'>
+              <p className='text-xs'>{`Been here before?`}</p>
+              <Link className='text-xs font-bold ms-2' href="/login">Login</Link>
+            </div>
+          </div>
+          <div className='flex w-full md:w-1/2 backdrop-blur-lg'>
+            <div className='flex flex-col relative h-full w-full'>
+              <div className='relative z-10 flex flex-col justify-between p-8 max-w-96 h-full'>
+                <div>
+                  <h1 className='hidden'>SafePass</h1>
+                  <h2 className='text-base md:text-lg font-thin uppercase text-white'>REGISTRATIONS</h2>
+                </div>
+                <div className=''>
+                  <h3 className={`text-4xl md:text-6xl font-normal tracking-wide leading-none mt-8 md:mt-32 mb-4 uppercase text-white ${font.className}`}>SAVE YOUR INFORMATIONS</h3>
+                  <p className='font-thin text-sm text-white'>5000+ people have already trusted us, You can be one of them to enjoy the service in free</p>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
