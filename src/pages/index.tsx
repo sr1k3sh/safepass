@@ -34,7 +34,7 @@ type Props = {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
-  if (!session && !session?.user) {
+  if (!session) {
     res.statusCode = 403;
     return { props: { drafts: [] } };
   }
