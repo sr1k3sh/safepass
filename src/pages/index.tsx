@@ -137,8 +137,8 @@ const Dashboard: React.FC<Props> = (props) => {
     setShowPassword(prev => !prev)
   }
 
-  const onClickCopyPass = () => {
-    navigator.clipboard.writeText(data[0].password)
+  const onClickCopyPass = (pass: string) => {
+    navigator.clipboard.writeText(pass)
     toast({
       description: 'Password copied to clipboard',
     })
@@ -295,7 +295,7 @@ const Dashboard: React.FC<Props> = (props) => {
                                               </span>
                                             </div>
                                             <div className='flex flex-row gap-1'>
-                                              <Button onClick={onClickCopyPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+                                              <Button onClick={() => onClickCopyPass(currentPass.password)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
                                                 <FiCopy />
                                               </Button>
                                               <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
@@ -444,7 +444,7 @@ const Dashboard: React.FC<Props> = (props) => {
                                           </span>
                                         </div>
                                         <div className='flex flex-row gap-1'>
-                                          <Button onClick={onClickCopyPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+                                          <Button onClick={() => onClickCopyPass(currentPass.Password)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
                                             <FiCopy />
                                           </Button>
                                           <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
