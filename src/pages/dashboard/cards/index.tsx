@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return { props: { drafts: [] } };
   }
 
-  const data = await prisma.createPassWords.findMany({
+  const data = await prisma.cards.findMany({
     where: {
       author: { email: session.user.email },
     },
@@ -58,13 +58,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const encryptedData = data.map((pass: any) => {
     return ({
       ...pass,
-      password: encrypter.decrypt(pass.password)
+      cvv: encrypter.decrypt(pass.cvv),
+      cardNumber: encrypter.decrypt(pass.cardNumber),
     })
   })
 
+  console.log(encryptedData)
   return {
     props: {
-      data: [...encryptedData],
+      data: JSON.parse(JSON.stringify(encryptedData)),
       session: await getServerSession(
         req,
         res,
@@ -191,139 +193,140 @@ const Dashboard: React.FC<Props> = (props) => {
         <div className='flex flex-row justify-between relative z-10'>
           {
             isMobile ?
-              <div className="flex h-full w-full items-center justify-center">
-                <div className='flex flex-col w-full p-4 '>
-                  <div>
-                    <DashboardHeader />
-                  </div>
-                  <div className='flex flex-col ps-0 md:p-4 mt-8 gap-4 overflow-hidden h-dvh'>
-                    <h3 className='font-bold text-lg '>Logins</h3>
-                    <div className='flex flex-col w-full text-foreground'>
-                      <ScrollArea className='grid grid-cols-1 gap-2 p-2 overflow-auto h-full'>
-                        {
-                          data && data.length && data.map((pass: any, i: number) => (
-                            <div key={pass + i} className='w-full mb-2 last:mb-0'>
-                              <Sheet>
-                                <SheetTrigger className='w-full'>
-                                  <div key={i} className={`flex flex-row w-full items-center gap-4 p-4 rounded-lg bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
-                                    <div className='flex flex-col'>
-                                      <Avatar>
-                                        <AvatarImage src={pass?.image} />
-                                        <AvatarFallback className=' font-bold uppercase'>{pass.title.charAt(0)}</AvatarFallback>
-                                      </Avatar>
-                                    </div>
-                                    <div className='flex flex-col'>
-                                      <h3 className='text-sm font-semibold text-foreground'>{pass.title}</h3>
-                                      <span className='text-xs text-muted-foreground text-left'>{pass.username}</span>
-                                    </div>
-                                  </div>
-                                </SheetTrigger>
-                                <SheetContent>
-                                  {
-                                    currentPass &&
-                                    <>
-                                      <div className='flex flex-row justify-between items-start mt-4'>
-                                        <div className='flex flex-col items-start justify-start gap-4'>
-                                          <div className={`p-2 rounded-lg ${currentCategoryStyle(currentPass.category).bg}`}>
-                                            <Avatar>
-                                              <AvatarImage src={currentPass.image} />
-                                              <AvatarFallback>{currentPass.username.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                          </div>
-                                        </div>
-                                        <div className='flex flex-row items-center'>
-                                          <Button size={'icon'} variant={'ghost'}>
-                                            <FiStar />
-                                          </Button>
-                                          <Button size={'icon'} variant={'ghost'}>
-                                            <FiEdit />
-                                          </Button>
-                                          <DropdownMenu>
-                                            <DropdownMenuTrigger>
-                                              <Button size={'icon'} variant={'ghost'}>
-                                                <FiMenu />
-                                              </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                              <DropdownMenuItem>
-                                                <div className='flex flex-row items-center gap-2' onClick={() => onDeletePass(currentPass.id)}>
-                                                  <FiDelete />
-                                                  Delete
-                                                </div>
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem>
-                                                <div className='flex flex-row items-center gap-2'>
-                                                  <FiShare />
-                                                  Share
-                                                </div>
-                                              </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                          </DropdownMenu>
-                                        </div>
-                                      </div>
-                                      <div className='flex flex-col gap-6 mt-4'>
-                                        <div className='flex flex-col'>
-                                          <div className='flex flex-col gap-1 w-full'>
-                                            <h3 className='text-sm font-semibold text-foreground mb-2'>{currentPass.title}</h3>
-                                            <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge>
-                                          </div>
-                                          <div className='flex flex-row justify-between items-start mt-8'>
-                                            <div className='flex flex-col gap-2'>
-                                              <span className='text-xs text-muted-foreground font-normal tracking-wide'>Website</span>
-                                              <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span>
-                                            </div>
-                                            <Link href={currentPass.url} passHref={true} target='_blank'>
-                                              <FiExternalLink />
-                                            </Link>
-                                          </div>
-                                        </div>
-                                        <div className='flex flex-col gap-2'>
-                                          <span className='text-xs text-muted-foreground font-normal tracking-wide'>Username</span>
-                                          <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span>
-                                        </div>
-                                        <div className='flex flex-col'>
-                                          <div className='flex flex-row justify-between items-center'>
-                                            <div className='flex flex-col gap-2'>
-                                              <span className='text-xs text-muted-foreground font-normal tracking-wide'>Password</span>
-                                              <span className='text-xs text-foreground font-normal tracking-wide flex flex-row gap-2'>
-                                                {
-                                                  isShowPassword ?
-                                                    currentPass.password
-                                                    :
-                                                    [1, 2, 3, 4, 5, 6, 7, 8].map((data: any, i: number) => (
-                                                      <span key={data + i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
-                                                    ))
-                                                }
-                                              </span>
-                                            </div>
-                                            <div className='flex flex-row gap-1'>
-                                              <Button onClick={() => onClickCopyPass(currentPass.password)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
-                                                <FiCopy />
-                                              </Button>
-                                              <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
-                                                {
-                                                  isShowPassword ?
-                                                    <FiEye /> :
-                                                    <FiEyeOff />
-                                                }
-                                              </Button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </>
-                                  }
-                                </SheetContent>
-                              </Sheet>
-                            </div>
-                          ))
-                        }
-                      </ScrollArea>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            null
+              // <div className="flex h-full w-full items-center justify-center">
+              //   <div className='flex flex-col w-full p-4 '>
+              //     <div>
+              //       <DashboardHeader />
+              //     </div>
+              //     <div className='flex flex-col ps-0 md:p-4 mt-8 gap-4 overflow-hidden h-dvh'>
+              //       <h3 className='font-bold text-lg '>Cards</h3>
+              //       <div className='flex flex-col w-full text-foreground'>
+              //         <ScrollArea className='grid grid-cols-1 gap-2 p-2 overflow-auto h-full'>
+              //           {
+              //             data && data.length && data.map((pass: any, i: number) => (
+              //               <div key={pass + i} className='w-full mb-2 last:mb-0'>
+              //                 <Sheet>
+              //                   <SheetTrigger className='w-full'>
+              //                     <div key={i} className={`flex flex-row w-full items-center gap-4 p-4 rounded-lg bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
+              //                       <div className='flex flex-col'>
+              //                         <Avatar>
+              //                           <AvatarImage src={pass?.image} />
+              //                           <AvatarFallback className=' font-bold uppercase'>{pass.title.charAt(0)}</AvatarFallback>
+              //                         </Avatar>
+              //                       </div>
+              //                       <div className='flex flex-col'>
+              //                         <h3 className='text-sm font-semibold text-foreground'>{pass.title}</h3>
+              //                         <span className='text-xs text-muted-foreground text-left'>{pass.username}</span>
+              //                       </div>
+              //                     </div>
+              //                   </SheetTrigger>
+              //                   <SheetContent>
+              //                     {
+              //                       currentPass &&
+              //                       <>
+              //                         <div className='flex flex-row justify-between items-start mt-4'>
+              //                           <div className='flex flex-col items-start justify-start gap-4'>
+              //                             <div className={`p-2 rounded-lg ${currentCategoryStyle(currentPass.category).bg}`}>
+              //                               <Avatar>
+              //                                 <AvatarImage src={currentPass.image} />
+              //                                 <AvatarFallback>{currentPass.username.charAt(0)}</AvatarFallback>
+              //                               </Avatar>
+              //                             </div>
+              //                           </div>
+              //                           <div className='flex flex-row items-center'>
+              //                             <Button size={'icon'} variant={'ghost'}>
+              //                               <FiStar />
+              //                             </Button>
+              //                             <Button size={'icon'} variant={'ghost'}>
+              //                               <FiEdit />
+              //                             </Button>
+              //                             <DropdownMenu>
+              //                               <DropdownMenuTrigger>
+              //                                 <Button size={'icon'} variant={'ghost'}>
+              //                                   <FiMenu />
+              //                                 </Button>
+              //                               </DropdownMenuTrigger>
+              //                               <DropdownMenuContent>
+              //                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              //                                 <DropdownMenuItem>
+              //                                   <div className='flex flex-row items-center gap-2' onClick={() => onDeletePass(currentPass.id)}>
+              //                                     <FiDelete />
+              //                                     Delete
+              //                                   </div>
+              //                                 </DropdownMenuItem>
+              //                                 <DropdownMenuItem>
+              //                                   <div className='flex flex-row items-center gap-2'>
+              //                                     <FiShare />
+              //                                     Share
+              //                                   </div>
+              //                                 </DropdownMenuItem>
+              //                               </DropdownMenuContent>
+              //                             </DropdownMenu>
+              //                           </div>
+              //                         </div>
+              //                         <div className='flex flex-col gap-6 mt-4'>
+              //                           <div className='flex flex-col'>
+              //                             <div className='flex flex-col gap-1 w-full'>
+              //                               <h3 className='text-sm font-semibold text-foreground mb-2'>{currentPass.title}</h3>
+              //                               <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge>
+              //                             </div>
+              //                             <div className='flex flex-row justify-between items-start mt-8'>
+              //                               <div className='flex flex-col gap-2'>
+              //                                 <span className='text-xs text-muted-foreground font-normal tracking-wide'>Website</span>
+              //                                 <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span>
+              //                               </div>
+              //                               <Link href={currentPass.url} passHref={true} target='_blank'>
+              //                                 <FiExternalLink />
+              //                               </Link>
+              //                             </div>
+              //                           </div>
+              //                           <div className='flex flex-col gap-2'>
+              //                             <span className='text-xs text-muted-foreground font-normal tracking-wide'>Username</span>
+              //                             <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span>
+              //                           </div>
+              //                           <div className='flex flex-col'>
+              //                             <div className='flex flex-row justify-between items-center'>
+              //                               <div className='flex flex-col gap-2'>
+              //                                 <span className='text-xs text-muted-foreground font-normal tracking-wide'>Password</span>
+              //                                 <span className='text-xs text-foreground font-normal tracking-wide flex flex-row gap-2'>
+              //                                   {
+              //                                     isShowPassword ?
+              //                                       currentPass.password
+              //                                       :
+              //                                       [1, 2, 3, 4, 5, 6, 7, 8].map((data: any, i: number) => (
+              //                                         <span key={data + i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
+              //                                       ))
+              //                                   }
+              //                                 </span>
+              //                               </div>
+              //                               <div className='flex flex-row gap-1'>
+              //                                 <Button onClick={() => onClickCopyPass(currentPass.password)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+              //                                   <FiCopy />
+              //                                 </Button>
+              //                                 <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+              //                                   {
+              //                                     isShowPassword ?
+              //                                       <FiEye /> :
+              //                                       <FiEyeOff />
+              //                                   }
+              //                                 </Button>
+              //                               </div>
+              //                             </div>
+              //                           </div>
+              //                         </div>
+              //                       </>
+              //                     }
+              //                   </SheetContent>
+              //                 </Sheet>
+              //               </div>
+              //             ))
+              //           }
+              //         </ScrollArea>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </div>
               :
               <ResizablePanelGroup
                 onLayout={onLayoutResizeable}
@@ -332,7 +335,7 @@ const Dashboard: React.FC<Props> = (props) => {
                 className="min-h-[200px] rounded-lg border"
               >
                 <ResizablePanel minSize={4} defaultSize={20} maxSize={25}>
-                  <DashboardSidebar active='logins' showJustIconSidebar={showJustIconSidebar} />
+                  <DashboardSidebar active='cards' showJustIconSidebar={showJustIconSidebar} />
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={75}>
@@ -340,7 +343,7 @@ const Dashboard: React.FC<Props> = (props) => {
                     <div className='flex flex-col w-full p-4 '>
                       <div>
                         <DashboardHeader />
-                        <h3 className='font-bold text-lg mt-8'>Logins</h3>
+                        <h3 className='font-bold text-lg mt-8'>Cards</h3>
                       </div>
                       <div className='flex flex-row ps-0 p-4 gap-4 overflow-hidden h-dvh'>
                         <div className='flex flex-col w-2/5 text-foreground bg-background-opacity'>
@@ -349,15 +352,15 @@ const Dashboard: React.FC<Props> = (props) => {
                               data && data.length && data.map((pass: any, i: number) => (
                                 <div key={i} className={`flex flex-row items-center gap-4 p-4 rounded-lg hover:bg-secondary cursor-pointer ${currentPass && currentPass.id === pass.id && 'bg-primary'}`} onClick={() => onClickPassList(i)}>
                                   <div className='flex flex-col'>
-                                    <Avatar>
-                                      <AvatarImage src={pass?.image} />
-                                      <AvatarFallback className=' font-bold uppercase'>{pass.title.charAt(0)}</AvatarFallback>
-                                    </Avatar>
+                                    <span className='font-bold uppercase'>
+                                    {pass.type.charAt(0)}
+                                    </span>
+
                                   </div>
                                   <div className='flex flex-col'>
-                                    <h3 className='text-sm font-semibold text-foreground'>{pass.title}</h3>
+                                    <h3 className='text-sm font-semibold text-foreground'>{pass.bank}</h3>
                                     <div>
-                                      <span className='text-xs text-muted-foreground'>{pass.username}</span>
+                                      <span className='text-xs text-muted-foreground'>{pass.expiration}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -372,15 +375,14 @@ const Dashboard: React.FC<Props> = (props) => {
                               <CardHeader>
                                 <div className='flex flex-row justify-between items-start'>
                                   <div className='flex flex-row items-center justify-start gap-4'>
-                                    <div className={` p-2 rounded-lg ${currentCategoryStyle(currentPass.category).bg}`}>
-                                      <Avatar>
-                                        <AvatarImage src={currentPass.image} />
-                                        <AvatarFallback>{currentPass.username.charAt(0)}</AvatarFallback>
-                                      </Avatar>
+                                    <div className={` p-2 rounded-lg ${currentCategoryStyle(currentPass.type).bg}`}>
+                                      {
+                                        currentPass.type.charAt(0
+                                      )}
                                     </div>
                                     <div className='flex flex-col gap-1'>
-                                      <h3 className='text-sm font-semibold text-foreground'>{currentPass.title}</h3>
-                                      <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge>
+                                      <h3 className='text-sm font-semibold text-foreground'>{currentPass.cardHolder}</h3>
+                                      {/* <Badge variant={'default'} className={`rounded-sm w-fit ${currentCategoryStyle(currentPass.category).text} ${currentCategoryStyle(currentPass.category).textBg} text-xs font-medium bg-opacity-20`}>{currentPass.category || 'none'}</Badge> */}
                                     </div>
                                   </div>
                                   <div className='flex flex-row items-center'>
@@ -421,16 +423,14 @@ const Dashboard: React.FC<Props> = (props) => {
                                     <div className='flex flex-row justify-between items-start'>
                                       <div className='flex flex-col gap-2'>
                                         <span className='text-xs text-muted-foreground font-normal tracking-wide'>Website</span>
-                                        <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span>
+                                        {/* <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.url}</span> */}
                                       </div>
-                                      <Link href={currentPass.url} passHref={true} target='_blank'>
-                                        <FiExternalLink />
-                                      </Link>
+                                      {/*  */}
                                     </div>
                                   </div>
                                   <div className='flex flex-col gap-2'>
                                     <span className='text-xs text-muted-foreground font-normal tracking-wide'>Username</span>
-                                    <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span>
+                                    {/* <span className='text-xs text-foreground font-normal tracking-wide'>{currentPass.username}</span> */}
                                   </div>
                                   <div className='flex flex-col'>
                                     <div className='flex flex-row justify-between items-center'>
@@ -439,7 +439,7 @@ const Dashboard: React.FC<Props> = (props) => {
                                         <span className='text-xs text-foreground font-normal tracking-wide flex flex-row gap-2'>
                                           {
                                             isShowPassword ?
-                                              currentPass.password
+                                              currentPass.cardNumber
                                               :
                                               [1, 2, 3, 4, 5, 6, 7, 8].map((data: any, i: number) => (
                                                 <span key={data + i} className='flex w-2 h-2 rounded-full bg-foreground'></span>
@@ -448,7 +448,7 @@ const Dashboard: React.FC<Props> = (props) => {
                                         </span>
                                       </div>
                                       <div className='flex flex-row gap-1'>
-                                        <Button onClick={() => onClickCopyPass(currentPass.Password)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
+                                        <Button onClick={() => onClickCopyPass(currentPass.cvv)} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>
                                           <FiCopy />
                                         </Button>
                                         <Button onClick={onClickShowPass} variant={'ghost'} size={'icon'} className='hover:bg-slate-700'>

@@ -22,7 +22,11 @@ const config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        gradient: "var(--gradient)",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          opacity: "hsl(var(--background-opacity))",
+        },
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -39,6 +43,7 @@ const config = {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
+          opacity: "hsl(var(--muted-opacity))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",

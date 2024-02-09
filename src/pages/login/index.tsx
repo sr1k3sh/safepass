@@ -57,7 +57,7 @@ export default function Login({ }: Props) {
   }
 
   useEffect(() => {
-    if (session && session.user) {
+    if (session && session.user.email) {
       router.push('/')
     }
   }, [session, router])

@@ -59,6 +59,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   createPassWords CreatePassWords[]
+  cards         cards[]
 }
 
 model VerificationToken {
@@ -79,6 +80,18 @@ model CreatePassWords {
   email      String?
   password   String?
   category   String?
+  author    User?   @relation(fields: [authorId], references: [id])
+  authorId  String?
+}
+
+model cards {
+  id         Int      @id @default(autoincrement())
+  type       String
+  bank       String
+  cardHolder String
+  cardNumber String
+  cvv        String
+  expiration     DateTime
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
 }
