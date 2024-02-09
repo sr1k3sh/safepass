@@ -80,7 +80,7 @@ export default function Login({ }: Props) {
   }, [session, router])
 
   return (
-    <RootLayout themeMode='light'>
+    <RootLayout>
       <Image className='z-0 h-full' src={'/login.png'} alt='login' objectFit='cover' fill />
       <section className='container m-auto flex flex-row justify-center items-center md:h-dvh p-8 relative z-10'>
         <Card className='flex flex-col-reverse md:flex-row justify-center overflow-hidden w-full bg-transparent'>
