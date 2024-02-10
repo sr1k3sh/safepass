@@ -66,7 +66,7 @@ export default function DashboardTemplate({ }: Props) {
         {
           session?.user &&
           <div className='mb-4'>
-            <h2 className='text-3xl mb-2'>Welcome {session.user.name}</h2>
+            <h2 className='text-2xl font-bold uppercase'>Welcome <span className='text-primary'>{session.user.name}</span></h2>
             <p className='text-foreground font-thin text-sm'>{`Here's what's happening with your account today.`}</p>
           </div>
         }

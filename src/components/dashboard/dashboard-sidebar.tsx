@@ -1,5 +1,4 @@
 import React from 'react'
-import { Card } from '@/components/ui/card'
 import { FiCreditCard } from '@react-icons/all-files/fi/FiCreditCard'
 import { FiClipboard } from '@react-icons/all-files/fi/FiClipboard'
 import { FiHeart } from '@react-icons/all-files/fi/FiHeart'
@@ -17,13 +16,13 @@ const activeStyle = 'bg-primary text-foreground'
 const sidebarItems = [
   {
     name: 'Dashboard',
-    icon: <FiCommand size={16} />,
+    icon: <FiCommand size={16}/>,
     href: '/dashboard',
   },
   {
     name: 'Logins',
     icon: <FiKey size={16} />,
-    href: '/',
+    href: '/dashboard/logins',
   },
   {
     name: 'Cards',
@@ -61,7 +60,7 @@ export default function DashboardSidebar({ showJustIconSidebar = false, active }
                   {item.icon}
                 </span>
                 {
-                  showJustIconSidebar ? null : <span className=' font-thin text-base'>{item.name}</span>
+                  showJustIconSidebar ? null : <span className='tracking-wide font-semibold text-base'>{item.name}</span>
                 }
               </Link>
             ))
@@ -70,29 +69,29 @@ export default function DashboardSidebar({ showJustIconSidebar = false, active }
         <h3 className='mt-4 font-semibold text-base p-2'>{
           showJustIconSidebar ? 'Cat' : 'Categories'
         }</h3>
-        <ul className='flex flex-col justify-start'>
-          <li className={`p-3 flex flex-row ${showJustIconSidebar ? 'justify-center' : 'justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
-            <span className='flex w-2 h-2 rounded-full bg-red-400'></span>
+        <ul className={`flex flex-col justify-start ${showJustIconSidebar ? 'gap-4 mt-4' : 'gap-0'}`}>
+          <li className={`flex flex-row ${showJustIconSidebar ? 'justify-center gap-0 p-0' : 'p-3 justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
+            <span className={`flex ${showJustIconSidebar ? 'w-8 h-8 rounded-sm flex justify-center items-center font-bold font-xs text-muted' : 'w-2 h-2 rounded-full'} bg-red-400`}>{showJustIconSidebar && 'S'}</span>
             {
-              showJustIconSidebar ? null : <span className=' font-light text-base text-foreground'>Social</span>
+              showJustIconSidebar ? null : <span className=' font-semibold text-base text-foreground'>Social</span>
             }
           </li>
-          <li className={`p-3 flex flex-row ${showJustIconSidebar ? 'justify-center' : 'justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
-            <span className='flex w-2 h-2 rounded-full bg-green-400'></span>
+          <li className={`flex flex-row ${showJustIconSidebar ? 'justify-center gap-0 p-0' : 'p-3 justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
+            <span className={`flex ${showJustIconSidebar ? 'w-8 h-8 rounded-sm flex justify-center items-center font-bold font-xs text-muted' : 'w-2 h-2 rounded-full'} bg-green-400`}>{showJustIconSidebar && 'W'}</span>
             {
-              showJustIconSidebar ? null : <span className=' font-light text-base text-foreground'>Work</span>
+              showJustIconSidebar ? null : <span className=' font-semibold text-base text-foreground'>Work</span>
             }
           </li>
-          <li className={`p-3 flex flex-row ${showJustIconSidebar ? 'justify-center' : 'justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
-            <span className='flex w-2 h-2 rounded-full bg-yellow-400'></span>
+          <li className={`flex flex-row ${showJustIconSidebar ? 'justify-center gap-0 p-0' : 'p-3 justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
+            <span className={`flex ${showJustIconSidebar ? 'w-8 h-8 rounded-sm flex justify-center items-center font-bold font-xs text-muted' : 'w-2 h-2 rounded-full'} bg-yellow-400`}>{showJustIconSidebar && 'F'}</span>
             {
-              showJustIconSidebar ? null : <span className=' font-light text-base text-foreground'>Finance</span>
+              showJustIconSidebar ? null : <span className=' font-semibold text-base text-foreground'>Finance</span>
             }
           </li>
-          <li className={`p-3 flex flex-row ${showJustIconSidebar ? 'justify-center' : 'justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
-            <span className='flex w-2 h-2 rounded-full bg-blue-400'></span>
+          <li className={`flex flex-row ${showJustIconSidebar ? 'justify-center gap-0 p-0' : 'p-3 justify-start'} items-center gap-2 hover:bg-primary hover:text-foreground rounded-md`}>
+            <span className={`flex ${showJustIconSidebar ? 'w-8 h-8 rounded-sm flex justify-center items-center font-bold font-xs text-muted' : 'w-2 h-2 rounded-full'} bg-blue-400`}>{showJustIconSidebar && 'H'}</span>
             {
-              showJustIconSidebar ? null : <span className=' font-light text-base text-foreground'>Health</span>
+              showJustIconSidebar ? null : <span className=' font-semibold text-base text-foreground'>Health</span>
             }
           </li>
         </ul>

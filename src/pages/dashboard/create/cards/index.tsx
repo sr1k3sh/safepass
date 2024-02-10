@@ -95,7 +95,7 @@ export default function Create({ }: Props) {
 
   useEffect(() => {
     if (!session) {
-      router.push('/')
+      router.push('/login')
     }
   }, [session, router])
 

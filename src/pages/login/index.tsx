@@ -52,7 +52,7 @@ export default function Login({ }: Props) {
     })
 
     if(res?.ok) {
-      router.push('/')
+      router.push('/login')
     }
   }
 

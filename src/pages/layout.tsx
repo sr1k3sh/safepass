@@ -1,13 +1,13 @@
 import { Toaster } from "@/components/ui/toaster";
 import { createContext, useEffect, useState } from "react";
-
+import { RecoilRoot } from "recoil"
 interface RootLayoutProps {
   children: React.ReactNode
 }
 
 export const AppProvider = createContext({
   isMobile: false,
-  setIsMobile: (isMobile: boolean) => {}
+  setIsMobile: (isMobile: boolean) => { }
 })
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -32,16 +32,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
         setIsMobile(false)
       }
     })
-  },[])
+  }, [])
 
   if (!mounted) return <></>;
 
   return (
-    <AppProvider.Provider value={{ isMobile, setIsMobile }}>
-        {/* <body className="dark"> */}
-          {children}
-          <Toaster/>
-        {/* </body> */}
-    </AppProvider.Provider>
+    <RecoilRoot>
+      <AppProvider.Provider value={{ isMobile, setIsMobile }}>
+        {children}
+        <Toaster />
+      </AppProvider.Provider>
+    </RecoilRoot>
   )
 }

@@ -73,7 +73,6 @@ export default function Login({ }: Props) {
   }
 
   useEffect(() => {
-    console.log(session)
     if (session && session.user) {
       router.push('/')
     }
